@@ -1,5 +1,10 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
+<<<<<<< HEAD
 from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QMessageBox, QHeaderView, QFontComboBox, QComboBox
+=======
+from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QMessageBox, QHeaderView
+
+>>>>>>> 105a16fc75ca0870eed10c663f0e4b3c86eb29c7
 import sys
 
 
