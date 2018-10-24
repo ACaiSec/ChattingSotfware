@@ -1,7 +1,7 @@
 import socket
 import threading
 import pickle
-from InfoStructure import *
+from Structure import *
 
 class Client():
     def __init__(self):
@@ -24,7 +24,7 @@ class Client():
         while True:
             # 发送数据:
             data = input('Send message:')
-            data_structure = InfoStructure('xx', '127.0.0.1:10001', 'xuxu', '127.0.0.1:10000', data)
+            data_structure = InfoStructure('xx', 'xuxu', '127.0.0.1:10000', data)
             data_ser = pickle.dumps(data_structure)
             UDP_socket.sendto(data_ser, self.aim_addr)
 
