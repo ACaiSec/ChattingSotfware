@@ -4,17 +4,19 @@ from PyQt5.QtCore import QEvent, QRegExp, Qt
 from PyQt5.QtGui import QKeyEvent, QKeySequence, QRegExpValidator
 from PyQt5.QtWidgets import (QApplication, QCheckBox, QDialog, QFormLayout,
                              QHBoxLayout, QLabel, QLineEdit, QPushButton,
-                             QVBoxLayout, QWidget)
+                             QVBoxLayout, QWidget, QMessageBox)
+from register import Register
 
 
 class Login(QWidget):
 
-    def __init__(self):
+    def __init__(self, client):
         super().__init__()
         self.initUI()
 
     def initUI(self):
         '''创建界面'''
+
         # 生成控件实例
         self.user_name = QLabel('账号')
         self.passWord = QLabel('密码')
@@ -23,7 +25,14 @@ class Login(QWidget):
         self.rem_password = QCheckBox('记住密码')
         self.auto_login = QCheckBox('自动登录')
         self.login = QPushButton('登录')
+        self.register = QPushButton('注册')
+        self.clean = QPushButton('清除')
 
+        # 按键连接到信号槽
+        self.clean.clicked.connect(self.buttonclicked)
+
+        # 设置账户输入框的提示文本
+        self.userEdit.setPlaceholderText('还没有账号？请按左边。')
         # 密码输入框的骚操作
         # 为密码输入框安装事件过滤器
         self.passEdit.installEventFilter(self.passEdit)
@@ -45,6 +54,16 @@ class Login(QWidget):
         self.input_Field.setWidget(1, QFormLayout.LabelRole, self.passWord)
         self.input_Field.setWidget(1, QFormLayout.FieldRole, self.passEdit)
 
+        # 生成一个容纳注册按钮和清楚密码按钮的垂直布局
+        self.buttonLayout = QVBoxLayout()
+        self.buttonLayout.addWidget(self.register)
+        self.buttonLayout.addWidget(self.clean)
+
+        # pass
+        self.inputLayout = QHBoxLayout()
+        self.inputLayout.addLayout(self.input_Field)
+        self.inputLayout.addLayout(self.buttonLayout)
+
         # 生成一个容纳复选框的水平布局
         self.checkpoint = QHBoxLayout()
         self.checkpoint.addWidget(self.rem_password)
@@ -52,7 +71,7 @@ class Login(QWidget):
 
         # 主布局，用来容纳前面所有的子布局
         self.main_layout = QVBoxLayout()
-        self.main_layout.addLayout(self.input_Field)
+        self.main_layout.addLayout(self.inputLayout)
         self.main_layout.addLayout(self.checkpoint)
         self.main_layout.addWidget(self.login)
 
@@ -62,7 +81,7 @@ class Login(QWidget):
         # 设置窗口标题
         self.setWindowTitle('login')
         # 显示窗口
-        self.show()
+        self.userEdit.setFocus()
 
     def eventFilter(self, Object, event):
         if Object == self.passEdit:
@@ -74,7 +93,25 @@ class Login(QWidget):
                     return True
         return super().eventFilter(self, Object, QEvent)
 
+    def buttonclicked(self):
+        self.passEdit.clear()
 
+    def islogin(self, chat):
+        rem = False
+        auto = False
+        if self.userEdit.text() == '':
+            QMessageBox.information(self, '注意', '用户名不能为空')
+        elif self.passEdit.text() == '':
+            QMessageBox.information(self, '注意', '密码不能为空')
+        if self.rem_password.isChecked():
+            rem = True
+        if self.auto_login.isChecked():
+            auto = True
+        return True, rem, auto
+
+            
+
+        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle('WindowsVista')

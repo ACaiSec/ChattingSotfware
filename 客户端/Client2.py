@@ -63,6 +63,7 @@ class Client:
         :param auto_login: {[bool]} -- [自动登录的标记变量（暂无）] (default: {False})
         :return: [bool] -- [标记量，表示登陆是否成功]
         """
+        pass
 
 
 if __name__ == '__main__':

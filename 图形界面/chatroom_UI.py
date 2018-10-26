@@ -1,11 +1,9 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-<<<<<<< HEAD
-from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QMessageBox, QHeaderView, QFontComboBox, QComboBox
-=======
-from PyQt5.QtWidgets import QApplication, QWidget, QHBoxLayout, QVBoxLayout, QMessageBox, QHeaderView
-
->>>>>>> 105a16fc75ca0870eed10c663f0e4b3c86eb29c7
 import sys
+
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import (QApplication, QComboBox, QFontComboBox,
+                             QHBoxLayout, QHeaderView, QMessageBox,
+                             QVBoxLayout, QWidget)
 
 
 class example(QWidget):
@@ -19,11 +17,11 @@ class example(QWidget):
 
         self.setObjectName("ChatRoom")
         self.resize(598, 538)
-        self.setMinimumSize(588,528)
+        self.setMinimumSize(588, 528)
         self.setAcceptDrops(False)
 
         # 定义控件
-        #self.toolButton_font = QtWidgets.QToolButton()
+        # self.toolButton_font = QtWidgets.QToolButton()
         self.toolButton_image = QtWidgets.QToolButton()
         self.toolButton_file = QtWidgets.QToolButton()
         self.toolButton_1 = QtWidgets.QToolButton()
@@ -117,7 +115,7 @@ class example(QWidget):
         设置控件布局
         """
         self.h_box_1.addStretch(1)
-        #self.h_box_1.addWidget(self.toolButton_font)
+        # self.h_box_1.addWidget(self.toolButton_font)
         self.h_box_1.addWidget(self.toolButton_image)
         self.h_box_1.addWidget(self.toolButton_file)
         self.h_box_font.addStretch(1)
@@ -219,6 +217,3 @@ if __name__ == '__main__':
     ex = example()
     ex.show()
     sys.exit(app.exec_())      
-
-
-    
