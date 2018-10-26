@@ -30,7 +30,7 @@ class UDP_ForWard():
 
             elif data_structure.operation_num == 1:
                 # Login
-                pass
+                threading.Thread(target=self.Login, args=(UDP_socket, data_structure,)).start()
 
             elif data_structure.operation_num == 2:
                 # Chatting
@@ -71,6 +71,29 @@ class UDP_ForWard():
         else:
             print("Insert false!")
             UDP_socket.sendto(b'Insert false!!!', data_structure.userIP)
+            db.close()
+
+    def Login(self, UDP_socket, data_structure):
+        db = pymysql.connect('127.0.0.1', 'root', 'root', 'chatting')
+        cursor = db.cursor()
+        cursor.execute("SELECT * "
+                       "FROM  `user` "
+                       "WHERE username = '%s' "
+                       "AND password = '%s' "
+                       % (data_structure.username, data_structure.password))
+        data = cursor.fetchall()
+        if len(data) == 0:
+            print("Login false!!")
+            UDP_socket.sendto(b'Login false!!!', data_structure.userIP)
+            # 发送登录失败信息
+            db.close()
+        else:
+            print("Login success!!")
+            UDP_socket.sendto(b'Login success!!!', data_structure.userIP)
+            # 发送登录成功信息
+            '''
+            加入到在线用户列表
+            '''
             db.close()
 
 s = UDP_ForWard()
