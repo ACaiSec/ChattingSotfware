@@ -1,33 +1,20 @@
 import socket
 import threading
+import pickle
+from Structure import *
 
-class Client():
+
+class Client:
     def __init__(self):
-        self.addr_port = ('127.0.0.1', 10000)
+        self.addr_port = ('127.0.0.1', 10001)
         # 此客户端开放的端口
         self.aim_addr = ('127.0.0.1', 10086)
         # 目标地址
 
     def BuiltSocket(self):
-        #第一个参数是满足IP地址协议，第一个参数创建的socket完成UDP协议
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.bind(self.addr_port)
         return s
-
-    #登录
-    #主函数中循环判断登录成功
-    def Login(self,UDP_socket):
-        userName = input('用户名：')
-        password = input('密码：')
-        #登录信息格式
-        UDP_socket.sendto(bytes('##'+ userName + '##' + password, 'utf-8'), self.aim_addr)
-        recieve = UDP_socket.recv(1024)
-        if recieve == 'Y':
-            print('登陆成功！')
-            return True
-        elif recieve == 'N':
-            print('用户名或者密码错误！')
-            return False
 
     def Chatting(self):
         UDP_socket = self.BuiltSocket()
@@ -36,21 +23,48 @@ class Client():
 
     def SendMessage(self, UDP_socket):
         while True:
-            # 发送数据:
+            # 发送数据
             data = input('Send message:')
-            # 每一次发送数据都需要写上接收方的IP和port
-            UDP_socket.sendto(bytes(data, 'utf-8'), self.aim_addr)
+            data_structure = InfoStructure('xx', 'xuxu', '127.0.0.1:10000', data)
+            data_ser = pickle.dumps(data_structure)
+            UDP_socket.sendto(data_ser, self.aim_addr)
 
     def GetMessage(self, UDP_socket):
         while True:
-            data = UDP_socket.recv(1024)
-            print('\nReceived Message:', data.decode('utf-8'))
+            data_ser = UDP_socket.recv(1024)
+            data_structure = pickle.loads(data_ser)
+            print('\nReceived Message:', data_structure.data)
+            # print(UDP_socket.recv(2048).decode('utf-8'))
+
+    def Register(self, username, password):
+        """
+        用户注册
+        :param username: {[str]} -- [用户名的字符串]
+        :param password: {[str]} -- [密码的字符串]
+        :return: [bool] -- [用户注册成功/失败]
+        """
+        UDP_socket = self.BuiltSocket()
+        data_structure = RegisterStructure(username, password)
+        data_ser = pickle.dumps(data_structure)
+        UDP_socket.sendto(data_ser, self.aim_addr)
+        data_rev = UDP_socket.recv(1024)
+        if data_rev == b'Insert success!!!':
+            return True
+        else:
+            return False
 
 
-c = Client()
-c.Login
-while True:
-    if c.Login == 1:
-        c.Chatting()
-    else:
-        c.Login
+    def Login(self, username, password, is_remeber=False, auto_login=False):
+        """
+        用户登录
+        :param username: {[str]} -- [用户名的字符串]
+        :param password: {[str]} -- [密码的字符串]
+        :param is_remeber: {[bool]} -- [记住密码的标记变量（暂无）] (default: {False})
+        :param auto_login: {[bool]} -- [自动登录的标记变量（暂无）] (default: {False})
+        :return: [bool] -- [标记量，表示登陆是否成功]
+        """
+
+
+if __name__ == '__main__':
+    c = Client()
+    c.Register('123', '456')
