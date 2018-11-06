@@ -5,15 +5,14 @@ from PyQt5.QtGui import QKeyEvent, QKeySequence, QRegExpValidator
 from PyQt5.QtWidgets import (QApplication, QFormLayout, QHBoxLayout, QLabel,
                              QLineEdit, QMessageBox, QPushButton, QVBoxLayout,
                              QWidget)
-from Client2 import *
+
 
 
 
 class Register(QWidget):
     '''注册界面'''
-    def __init__(self, client):
+    def __init__(self, ):
         super().__init__()
-        self.client = client
         self.initUI()
 
     def initUI(self):
@@ -105,4 +104,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle('WindowsVista')
     ex = Register()
+    ex.show()
     sys.exit(app.exec_())

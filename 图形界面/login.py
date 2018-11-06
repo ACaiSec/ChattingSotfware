@@ -10,7 +10,7 @@ from register import Register
 
 class Login(QWidget):
 
-    def __init__(self, client):
+    def __init__(self):
         super().__init__()
         self.initUI()
 
@@ -116,4 +116,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle('WindowsVista')
     ex = Login()
+    ex.show()
     sys.exit(app.exec_())
