@@ -10,7 +10,7 @@ class UDP_ForWard():
 
     def BuiltSocket(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.bind(self.addr_port)
+        s.bind(self.addr_port)  # 绑定ip
         return s
 
     def GetInfo(self):
@@ -18,7 +18,7 @@ class UDP_ForWard():
         while True:
             try:
                 data, addr = UDP_socket.recvfrom(2048)
-                data_structure = pickle.loads(data)
+                data_structure = pickle.loads(data)  # 反序列化
                 print("Connection : ", addr)
                 data_structure.userIP = addr
             except:
@@ -30,7 +30,7 @@ class UDP_ForWard():
 
             elif data_structure.operation_num == 1:
                 # Login
-                threading.Thread(target=self.Login, args=(UDP_socket, data_structure,)).start()
+                pass
 
             elif data_structure.operation_num == 2:
                 # Chatting
@@ -46,7 +46,7 @@ class UDP_ForWard():
             data = pickle.dumps(data_structure)
             # 强行实现双向转发
             if data_structure.userIP == ('127.0.0.1', 10000):
-                UDP_socket.sendto(data , ('127.0.0.1', 10001))
+                UDP_socket.sendto(data, ('127.0.0.1', 10001))
             else:
                 UDP_socket.sendto(data, ('127.0.0.1', 10000))
 
@@ -56,7 +56,7 @@ class UDP_ForWard():
         cursor.execute("SELECT * "
                        "FROM  `user` "
                        "WHERE username = '%s' "
-                       % (data_structure.username))
+                       % data_structure.username)
         data = cursor.fetchall()
 
         if len(data) == 0:
@@ -65,35 +65,14 @@ class UDP_ForWard():
                            "values('%s', '%s')"
                            % (data_structure.username, data_structure.password))
             print("Insert success!")
-            UDP_socket.sendto(b'Insert success!!!', data_structure.userIP)
+            # UDP_socket.sendto(b'Insert success!!!', data_structure.userIP)
+            UDP_socket.sendto(b'Insert success!!!', '127.0.0.1')
             # 发送成功信息
             db.close()
         else:
             print("Insert false!")
-            UDP_socket.sendto(b'Insert false!!!', data_structure.userIP)
-            db.close()
-
-    def Login(self, UDP_socket, data_structure):
-        db = pymysql.connect('127.0.0.1', 'root', 'root', 'chatting')
-        cursor = db.cursor()
-        cursor.execute("SELECT * "
-                       "FROM  `user` "
-                       "WHERE username = '%s' "
-                       "AND password = '%s' "
-                       % (data_structure.username, data_structure.password))
-        data = cursor.fetchall()
-        if len(data) == 0:
-            print("Login false!!")
-            UDP_socket.sendto(b'Login false!!!', data_structure.userIP)
-            # 发送登录失败信息
-            db.close()
-        else:
-            print("Login success!!")
-            UDP_socket.sendto(b'Login success!!!', data_structure.userIP)
-            # 发送登录成功信息
-            '''
-            加入到在线用户列表
-            '''
+            # UDP_socket.sendto(b'Insert false!!!', data_structure.userIP)
+            UDP_socket.sendto(b'Insert false!!!', '127.0.0.1')
             db.close()
 
 s = UDP_ForWard()
