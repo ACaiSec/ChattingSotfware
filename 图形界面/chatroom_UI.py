@@ -1,16 +1,7 @@
-<<<<<<< HEAD
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout, QVBoxLayout, QMessageBox, QHeaderView, QFontComboBox, QComboBox
 from PyQt5.QtCore import pyqtSlot,Qt
-=======
->>>>>>> b512c18efcbdcdb949266dfce7de3a701043cd0c
 import sys
-
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import (QApplication, QComboBox, QFontComboBox,
-                             QHBoxLayout, QHeaderView, QMessageBox,
-                             QVBoxLayout, QWidget)
-
 
 class chat_Ui(QWidget):
 
@@ -28,14 +19,7 @@ class chat_Ui(QWidget):
         self.setAcceptDrops(False)
 
         # 定义控件
-<<<<<<< HEAD
         self.toolButton_bold = QtWidgets.QToolButton()
-=======
-        # self.toolButton_font = QtWidgets.QToolButton()
-        self.toolButton_image = QtWidgets.QToolButton()
-        self.toolButton_file = QtWidgets.QToolButton()
-        self.toolButton_1 = QtWidgets.QToolButton()
->>>>>>> b512c18efcbdcdb949266dfce7de3a701043cd0c
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("Image/B.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_bold.setIcon(icon1)
@@ -148,7 +132,6 @@ class chat_Ui(QWidget):
         """
         设置控件布局
         """
-<<<<<<< HEAD
         self.h_box_tool.addStretch(1)
         self.h_box_tool.addWidget(self.fontComboBox)
         self.h_box_tool.addWidget(self.comboBox_size)
@@ -161,22 +144,6 @@ class chat_Ui(QWidget):
         self.h_box_send_exit.addStretch(1)
         self.h_box_send_exit.addWidget(self.pushButton_send)
         self.h_box_send_exit.addWidget(self.pushButton_exit)
-=======
-        self.h_box_1.addStretch(1)
-        # self.h_box_1.addWidget(self.toolButton_font)
-        self.h_box_1.addWidget(self.toolButton_image)
-        self.h_box_1.addWidget(self.toolButton_file)
-        self.h_box_font.addStretch(1)
-        self.h_box_font.addWidget(self.fontComboBox)
-        self.h_box_font.addWidget(self.comboBox_size)
-        self.h_box_font.addWidget(self.toolButton_1)
-        self.h_box_font.addWidget(self.toolButton_2)
-        self.h_box_font.addWidget(self.toolButton_3)
-        self.h_box_font.addWidget(self.toolButton_4)
-        self.h_box_2.addStretch(1)
-        self.h_box_2.addWidget(self.pushButton_send)
-        self.h_box_2.addWidget(self.pushButton_exit)
->>>>>>> b512c18efcbdcdb949266dfce7de3a701043cd0c
         self.v_box_left.addWidget(self.textBrowser_show,3)
         self.v_box_left.addLayout(self.h_box_tool)
 
@@ -244,17 +211,12 @@ class chat_Ui(QWidget):
     @pyqtSlot()
     def on_exitPushButton_clicked(self):
         self.close()
-'''
+
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
-    ex = example()
-    ex.initUI()
+    ex = chat_Ui()
     ex.show()
     sys.exit(app.exec_())      
-<<<<<<< HEAD
-'''
 
     
-=======
->>>>>>> b512c18efcbdcdb949266dfce7de3a701043cd0c
