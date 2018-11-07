@@ -48,3 +48,13 @@ class Verify():
     def __init__(self, operation_num, verify):
         self.operation_num = operation_num
         self.verify = bool(verify)
+class relogin():
+    # 重复登录
+    def __init__(self):
+        self.state = 400
+
+class loopcheck():
+    # 状态检测包
+    def __init__(self):
+        self.status = '01010101'
+
