@@ -65,8 +65,8 @@ class Register(QWidget):
         self.register.clicked.connect(self.buttonclicked)
 
         self.setLayout(self.mainLayout)
-        self.setFixedSize(350, 135)
-        self.setWindowTitle('注册账号')       
+        self.setFixedSize(350, 140)
+        self.setWindowTitle('注册账号')
 
     def eventFilter(self, object, event):
         if object == self.passEdit or object == self.confirmPassEdit:
@@ -90,14 +90,15 @@ class Register(QWidget):
             # 两次密码不一致
             QMessageBox.information(self, '注册失败', '两次输入密码不一致')
         else:
-            signal = self.client.Register(userEdit.text(),passEdit.text())
+            signal = True
+            # signal = self.client.Register(userEdit.text(),passEdit.text())
             if signal:
                 # 返回值为真
                 QMessageBox.about(self, '注册成功', '欢迎使用本聊天室')
                 self.close()
             else:
                 QMessageBox.information(self, '注册失败', '该用户名已被占用！')
-        
+
 
 
 if __name__ == '__main__':

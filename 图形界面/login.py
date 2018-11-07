@@ -29,7 +29,7 @@ class Login(QWidget):
         self.clean = QPushButton('清除')
 
         # 按键连接到信号槽
-        self.clean.clicked.connect(self.buttonclicked)
+        self.clean.clicked.connect(self.cleanPassword)
 
         # 设置账户输入框的提示文本
         self.userEdit.setPlaceholderText('还没有账号？请按左边。')
@@ -93,25 +93,10 @@ class Login(QWidget):
                     return True
         return super().eventFilter(self, Object, QEvent)
 
-    def buttonclicked(self):
+    def cleanPassword(self):
         self.passEdit.clear()
 
-    def islogin(self, chat):
-        rem = False
-        auto = False
-        if self.userEdit.text() == '':
-            QMessageBox.information(self, '注意', '用户名不能为空')
-        elif self.passEdit.text() == '':
-            QMessageBox.information(self, '注意', '密码不能为空')
-        if self.rem_password.isChecked():
-            rem = True
-        if self.auto_login.isChecked():
-            auto = True
-        return True, rem, auto
 
-            
-
-        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle('WindowsVista')
