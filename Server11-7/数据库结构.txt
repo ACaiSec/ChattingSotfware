@@ -1,0 +1,13 @@
+数据库名：
+chatting
+	表名：
+	user
+		列名：
+		username
+		password
+
+	表名：
+	focus
+		列名：
+		user
+		focus_user
