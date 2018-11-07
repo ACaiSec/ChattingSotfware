@@ -110,6 +110,7 @@ class Client:
                 font.setPointSize(16)
                 y.setText(x)
                 self.list.listWidget.addItem(y)
+            self.login_UI.close()
             self.list.show()
         else:
             # 如果失败
