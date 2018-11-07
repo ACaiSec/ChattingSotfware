@@ -8,7 +8,7 @@ userlist = [['xx', ('127.0.0.2', 10188), 'xxasd'], ['gx', ('127.0.0.3', 10189), 
 class list_Ui(QWidget):
 
     def __init__(self):
-       
+
         super().__init__()
         self.username = socket.getfqdn(socket.gethostname())
         self.userip = socket.gethostbyname(self.username)
@@ -21,14 +21,14 @@ class list_Ui(QWidget):
         self.resize(255, 678)
         self.setMinimumSize(245, 539)
         self.setMaximumSize(280, 768)
-        
+
         self.userInfo = QtWidgets.QLabel()
         self.userInfo.setObjectName("userInfo")
-        
+
         self.lineEdit = QtWidgets.QLineEdit()
         self.lineEdit.setFocusPolicy(QtCore.Qt.ClickFocus)
         self.lineEdit.setObjectName("lineEdit")
-        
+
         self.toolButton_search = QtWidgets.QToolButton()
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap("Image/S.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -36,7 +36,7 @@ class list_Ui(QWidget):
         self.toolButton_search.setIconSize(QtCore.QSize(32, 32))
         self.toolButton_search.setAutoRaise(True)
         self.toolButton_search.setObjectName("searchButton")
-        
+
         self.toolButton_add = QtWidgets.QToolButton()
         icon2 = QtGui.QIcon()
         icon2.addPixmap(QtGui.QPixmap("Image/A.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -44,7 +44,7 @@ class list_Ui(QWidget):
         self.toolButton_add.setIconSize(QtCore.QSize(32, 32))
         self.toolButton_add.setAutoRaise(True)
         self.toolButton_add.setObjectName("addButton")
-        
+
         self.listWidget = QtWidgets.QListWidget()
         self.listWidget.setObjectName("listWidget")
         self.listWidget.setStyleSheet("QListWidget{border:1px solid gray; color:black; }"
@@ -52,23 +52,13 @@ class list_Ui(QWidget):
                         "QListWidget::Item:hover{background:skyblue; }"
                         "QListWidget::item:selected:!active{border-width:0px; background:lightgreen; }"
                         )
-        self.listWidget.itemDoubleClicked.connect(self.listItemDoubleClick)
-        for user in userlist:
-            u = QListWidgetItem()
-            u.username = user[0]
-            u.userip = user[1][0]
-            u.userport = user[1][1]
-            font = QFont()
-            font.setPointSize(16)
-            u.setText(u.username)
-            self.listWidget.addItem(u)            
-
+        self.listWidget.itemDoubleClicked.connect(self.listItemDoubleClick)         
         self.h_box_search_add = QtWidgets.QHBoxLayout()
         self.h_box_search_add.setObjectName("h_box_search_add")
         self.h_box_search_add.addWidget(self.lineEdit)
         self.h_box_search_add.addWidget(self.toolButton_search)
         self.h_box_search_add.addWidget(self.toolButton_add)
-                 
+
         self.v_box_all = QtWidgets.QVBoxLayout()
         self.v_box_all.setObjectName("v_box_all")
         self.v_box_all.addWidget(self.userInfo)
@@ -99,11 +89,11 @@ class list_Ui(QWidget):
         item.chat.tableWidget_ulist.setItem(1,0,QTableWidgetItem(item.username))
         item.chat.tableWidget_ulist.setItem(1,1,QTableWidgetItem(item.userip + ':' + str(item.userport)))
         item.chat.tableWidget_ulist.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        item.chat.show()    
+        item.chat.show()
 
 if __name__ == "__main__":
     import sys
-    app = QtWidgets.QApplication(sys.argv) 
+    app = QtWidgets.QApplication(sys.argv)
     ui = list_Ui()
     ui.show()
     sys.exit(app.exec_())
