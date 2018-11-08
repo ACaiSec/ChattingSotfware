@@ -4,11 +4,11 @@ from Structure import *
 import time
 class Client():
     def __init__(self):
-        self.addr_port = ('127.0.0.2', 10188)
+        self.addr_port = ('127.0.0.2', 10150)
         # 此客户端开放的端口
-        self.aim_addr = ('127.0.0.1', 10187)
+        self.aim_addr = ('127.0.0.1', 10193)
         # 目标地址
-        self.bindcheck_port = ('127.0.0.1', 10110)
+        self.bindcheck_port = ('127.0.0.1', 10112)
 
     def BuiltSocket(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -21,7 +21,7 @@ class Client():
         threading.Thread(target=self.SendMessage, args=(UDP_socket,)).start()
 
     def SendMessage(self, UDP_socket):
-         while True:
+          while True:
             data = input('Send message:')
 
             data_structure = UpdateStructure('xx', 'xxcs1234', 'xxasd')
@@ -43,8 +43,8 @@ class Client():
 
 
 c = Client()
-#c.Chatting()
-c.Focus()
+c.Chatting()
+# c.Focus()
 '''
 while True:
     # 发送数据:
