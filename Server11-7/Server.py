@@ -18,9 +18,11 @@ class UDP_ForWard():
                            ['abcd', ('127.4.5.6', 12346), 'sasasa']]
         self.addr_port = ('127.0.0.1', 10187)
         self.bindcheck_port = ('127.0.0.1', 10193)
+        self.attention_port = ('127.0.0.1',10986)
 
         # threading.Thread(target=self.GetInfo).start()
         threading.Thread(target=self.BindCheck).start()
+        # threading.Thread(target = self.BroadcastAttention).start()
 
     def BuiltSocket(self, port):
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -123,9 +125,12 @@ class UDP_ForWard():
                     UDP_socket.sendto(pickle.dumps(repeat), each[1])
                     self.usr_online = filter(lambda x: x != [data_structure.username, each[1], each[2]], self.usr_online)
                     break
-            # 添加到用户上线列表
+            # 添加到用户上线列表bi
             hash.update((data_structure.username + data_structure.userIP[0] + str(data_structure.userIP[1]) + data_structure.password).encode('utf-8'))
             self.usr_online.append([data_structure.username, data_structure.userIP, hash.hexdigest()])
+            moreattention = self.GetFriend(data_structure.username)
+            attlist = attention(moreattention)
+            UDP_socket.sendto(pickle.dumps(attlist), data_structure.IP)
             # 检查是否有离线消息
 
             # 清空文件内容
@@ -142,6 +147,8 @@ class UDP_ForWard():
             unfinish = Verify(2, 0)
             UDP_socket.sendto(pickle.dumps(unfinish), data_structure.userIP)
             db.close()
+
+
 
     #关注
     def Focus(self, UDP_socket, data_structure):
@@ -183,7 +190,6 @@ class UDP_ForWard():
 
 
 
-
     def BindCheck(self):
         UDP_socket = self.BuiltSocket(self.bindcheck_port)
         UDP_socket.settimeout(10)
@@ -211,8 +217,10 @@ class UDP_ForWard():
             threading.Thread(target=self.ReceiveCheck(UDP_socket)).start()
             time.sleep(360)
 
+
     # 有一点需要注意当全体不在线，给谁广播？接收到时好办收不到直接就更新为空
     # 第二时间刚好错过问题
+
 
     # 接受哈希，更新在线用户列表
     def ReceiveCheck(self,UDP_socket):
@@ -236,5 +244,49 @@ class UDP_ForWard():
                     print(self.usr_online)
                     break
 
+
+
+
+
+    # 获取好友列表
+    def GetFriend(self, user_name):
+        onlinefri = []
+        db = pymysql.connect('127.0.0.1', 'root', 'root', 'chatting')
+        cursor = db.cursor()
+        cursor.execute("SELECT username "
+                       "FROM  `user` "
+                       "WHERE username = '%s' "
+                       % (user_name))
+        data = cursor.fetchall()
+
+        if len(data) > 0:
+            cursor2 = db.cursor()
+            cursor2.execute("SELECT * "
+                            "FROM  `focus` "
+                            "WHERE user = '%s' "
+                            % (user_name))
+            data2 = cursor.fetchall()
+            if len(data2) != 0:
+                for each in data:
+                    for another in self.usr_online:
+                        if (each[1] == another[0]):
+                            onlinefri.append(each[1])
+
+        return onlinefri
+
+    # 定时广播发送用户在线关注列表 开多了一个线程和端口
+    def BroadcastAttention(self):
+        UDP_socket = self.BuiltSocket(self.attention_port)
+        while True:
+            time.sleep(300)
+            for each in self.usr_online:
+                moreattention  = self.GetFriend(each[0])
+                focusstructure = attention(moreattention)
+                UDP_socket.sendto(pickle.dumps(focusstructure), each[1])
+
+
+
+
 s = UDP_ForWard()
+
 
