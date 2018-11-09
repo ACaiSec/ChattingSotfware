@@ -51,10 +51,16 @@ class Verify():
 class relogin():
     # 重复登录
     def __init__(self):
-        self.state = 400
+        self.operation_num = 6
 
 class loopcheck():
     # 状态检测包
     def __init__(self):
-        self.status = '01010101'
+        self.operation_num = 7
+
+class attention():
+    # 广播关注列表
+    def __init__(self, attention):
+        self.operation_num = 8
+        self.attentionlist = attention
 
