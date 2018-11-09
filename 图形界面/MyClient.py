@@ -17,9 +17,10 @@ from Structure import *
 
 class Client:
     def __init__(self):
-        self.addr_port = (self.GetHostIP(), 10002)
+        # self.addr_port = (self.GetHostIP(), 10002)
+        self.addr_port = ('127.0.0.1', 10002)
         # 客户端IP与开放的端口
-        self.aim_addr = ('127.0.0.1', 10076)
+        self.aim_addr = ('127.0.0.1', 10187)
         # 目标地址，即服务器IP，为固定IP
         self.login_UI = login()
         self.register_UI = register()
@@ -125,7 +126,7 @@ class Client:
 
         # 在这里将关注列表添加到usernames中
 
-        if data_rev.verify:
+        if data_rev.verify == True and data_rev.operation_num == 1:
             self.username = username
             self.list = list_Ui(self.username)
             # 这里缺一句界面关联关注功能的函数调用，界面组后续会补上
@@ -176,7 +177,7 @@ class Client:
         :param user:{[str]} --[要关注的用户名的字符串] 
         """
         user = str(self.list.lineEdit.text())
-        if Focus(self.username,user):
+        if FocusStructure(self.username,user):
             #self.usernames.append(user) 添加到本地关注列表中
             self.list.addConcern(user)
             self.list.listWidget.item(self.list.listWidget.count()-1).chat.pushButton_send.clicked.connect(lambda: self.sendBtnClicked(user))

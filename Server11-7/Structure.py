@@ -35,7 +35,7 @@ class UpdateStructure():
         self.userIP = userIP
         self.hashstring = hashstring
 
-class Focus():
+class FocusStructure():
     # 关注
     def __init__(self, username, target_user, userIP = None):
         self.operation_num = 4
@@ -43,22 +43,22 @@ class Focus():
         self.userIP = userIP
         self.target_user = target_user
 
-class Verify():
+class VerifyStructure():
     # 对操作的确认
     def __init__(self, operation_num, verify):
         self.operation_num = operation_num
         self.verify = bool(verify)
-class relogin():
+class reloginStructure():
     # 重复登录
     def __init__(self):
         self.operation_num = 6
 
-class loopcheck():
+class loopcheckStructure():
     # 状态检测包
     def __init__(self):
         self.operation_num = 7
 
-class attention():
+class attentionStructure():
     # 广播关注列表
     def __init__(self, attention):
         self.operation_num = 8

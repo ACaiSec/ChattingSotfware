@@ -37,7 +37,7 @@ class Client():
 
     def Focus(self):
         UDP_socket = self.BuiltSocket()
-        data_structure = Focus('xuxu', 'kaikai')
+        data_structure = FocusStructure('xuxu', 'kaikai')
         data_ser = pickle.dumps(data_structure)
         UDP_socket.sendto(data_ser, self.aim_addr)
 

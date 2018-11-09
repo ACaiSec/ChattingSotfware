@@ -31,7 +31,7 @@ class list_Ui(QWidget):
         
         self.toolButton_search = QtWidgets.QToolButton()
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("图形界面/Image/S.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("./Image/S.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_search.setIcon(icon1)
         self.toolButton_search.setIconSize(QtCore.QSize(32, 32))
         self.toolButton_search.setAutoRaise(True)
@@ -39,7 +39,7 @@ class list_Ui(QWidget):
         
         self.toolButton_add = QtWidgets.QToolButton()
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("图形界面/Image/A.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("./Image/A.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_add.setIcon(icon2)
         self.toolButton_add.setIconSize(QtCore.QSize(32, 32))
         self.toolButton_add.setAutoRaise(True)

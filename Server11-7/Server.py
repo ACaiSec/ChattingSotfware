@@ -20,7 +20,7 @@ class UDP_ForWard():
         self.bindcheck_port = ('127.0.0.1', 10193)
         self.attention_port = ('127.0.0.1',10986)
 
-        # threading.Thread(target=self.GetInfo).start()
+        threading.Thread(target=self.GetInfo).start()
         threading.Thread(target=self.BindCheck).start()
         # threading.Thread(target = self.BroadcastAttention).start()
 
@@ -88,13 +88,13 @@ class UDP_ForWard():
                            "values('%s', '%s')"
                            % (data_structure.username, data_structure.password))
             print("Insert success!")
-            finish = Verify(1, 1)
+            finish = VerifyStructure(1, 1)
             UDP_socket.sendto(pickle.dumps(finish), data_structure.userIP)
             # 发送成功信息
             db.close()
         else:
             print("Insert false!")
-            unfinish = Verify(1, 0)
+            unfinish = VerifyStructure(1, 0)
             UDP_socket.sendto(pickle.dumps(unfinish), data_structure.userIP)
             db.close()
 
@@ -107,21 +107,25 @@ class UDP_ForWard():
         # 获得游标对象
         cursor = db.cursor()
         # 执行数据库语句
+        print('连接成功, %s, %s' % (data_structure.username, data_structure.password))
         cursor.execute("SELECT * "
-                       "FROM  `user` "
+                       "FROM  user "
                        "WHERE username = '%s' "
-                       % (data_structure.username))
-        data = cursor.fetchall()
+                       "AND password = '%s' "
+                       % (data_structure.username, data_structure.password))
+        data = cursor.fetchall()[0]
+        print(data)
+
 
         if data[0] == data_structure.username and data[1] == data_structure.password:
             print("核实有效，确有此人")
-            finish = Verify(2, 1)
+            finish = VerifyStructure(1, True)
             UDP_socket.sendto(pickle.dumps(finish), data_structure.userIP)
             db.close()
             # 检测是否重复登录  将原登录客户退出并抹去在线用户列表中
-            for each in usr_online:
+            for each in self.usr_online:
                 if data_structure.username == each[0]:
-                    repeat = relogin
+                    repeat = reloginStructure
                     UDP_socket.sendto(pickle.dumps(repeat), each[1])
                     self.usr_online = filter(lambda x: x != [data_structure.username, each[1], each[2]], self.usr_online)
                     break
@@ -129,8 +133,8 @@ class UDP_ForWard():
             hash.update((data_structure.username + data_structure.userIP[0] + str(data_structure.userIP[1]) + data_structure.password).encode('utf-8'))
             self.usr_online.append([data_structure.username, data_structure.userIP, hash.hexdigest()])
             moreattention = self.GetFriend(data_structure.username)
-            attlist = attention(moreattention)
-            UDP_socket.sendto(pickle.dumps(attlist), data_structure.IP)
+            attlist = attentionStructure(moreattention)
+            UDP_socket.sendto(pickle.dumps(attlist), data_structure.userIP)
             # 检查是否有离线消息
 
             # 清空文件内容
@@ -144,7 +148,7 @@ class UDP_ForWard():
             # 收到文件
         else:
             print("查无此人")
-            unfinish = Verify(2, 0)
+            unfinish = VerifyStructure(1, False)
             UDP_socket.sendto(pickle.dumps(unfinish), data_structure.userIP)
             db.close()
 
@@ -180,7 +184,7 @@ class UDP_ForWard():
                                 "VALUES ('%s', '%s')"
                                 % (data_structure.user, data_structure.target_user))
 
-            return_structure = Verify(4, True)
+            return_structure = VerifyStructure(4, True)
             data_ser = pickle.dumps(return_structure)
             UDP_socket.sendto(data_ser, data_structure.userIP)
             print("Focus success")
@@ -197,7 +201,7 @@ class UDP_ForWard():
 
     # 广播更新检测消息给客户端每个用户，每隔6分钟从新循环进行广播
     def SendCheck(self,UDP_socket):
-        heart = loopcheck()
+        heart = loopcheckStructure()
         while True:
             time.sleep(20)
 
@@ -281,7 +285,7 @@ class UDP_ForWard():
             time.sleep(300)
             for each in self.usr_online:
                 moreattention  = self.GetFriend(each[0])
-                focusstructure = attention(moreattention)
+                focusstructure = attentionStructure(moreattention)
                 UDP_socket.sendto(pickle.dumps(focusstructure), each[1])
 
 

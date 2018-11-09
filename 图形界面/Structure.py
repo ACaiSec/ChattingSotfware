@@ -1,27 +1,24 @@
 import pickle
 
-
-class RegisterStructure:
+class RegisterStructure():
     # 注册
-    def __init__(self, username, password, userIP=None):
+    def __init__(self, username, password, userIP = None):
         self.operation_num = 0
         self.username = username
         self.password = password
         self.userIP = userIP
 
-
-class LoginStructure:
+class LoginStructure():
     # 登录
-    def __init__(self, username, password, userIP=None):
+    def __init__(self, username, password, userIP = None):
         self.operation_num = 1
         self.username = username
         self.password = password
         self.userIP = userIP
 
-
-class InfoStructure:
+class InfoStructure():
     # 消息传输
-    def __init__(self, username, target_user, data, targetIP=None, userIP=None):
+    def __init__(self, username, target_user, targetIP, data, userIP = None):
         self.operation_num = 2
         self.username = username
         self.userIP = userIP
@@ -29,28 +26,41 @@ class InfoStructure:
         self.targetIP = targetIP
         self.data = data
 
+class UpdateStructure():
+    # 在线检测
+    def __init__(self, username, password, hashstring, userIP=None):
+        self.operation_num = 3
+        self.username = username
+        self.password = password
+        self.userIP = userIP
+        self.hashstring = hashstring
 
-if __name__ == '__main__':
-    i = RegisterStructure('123', '456')
-    ii = pickle.dumps(i)
-    print(type(ii))
-    print(ii)
+class FocusStructure():
+    # 关注
+    def __init__(self, username, target_user, userIP = None):
+        self.operation_num = 4
+        self.username = username
+        self.userIP = userIP
+        self.target_user = target_user
 
-    k = pickle.loads(ii)
-    print(type(k))
-    print(k)
-    print(k.username, k.password)
-    '''
-    i = InfoStructure('xuxu', 'xx', 'halou')
-    ii = pickle.dumps(i)
-    print(type(ii))
-    print(ii)
+class VerifyStructure():
+    # 对操作的确认
+    def __init__(self, operation_num, verify):
+        self.operation_num = operation_num
+        self.verify = bool(verify)
+class reloginStructure():
+    # 重复登录
+    def __init__(self):
+        self.operation_num = 6
 
-    k = pickle.loads(ii)
-    print(type(k))
-    print(k.username, k.target_user, k.data)
+class loopcheckStructure():
+    # 状态检测包
+    def __init__(self):
+        self.operation_num = 7
 
-    l = LoginStructure('123', '43434')
-    print(l.operation_num)
-    print(l.username)
-    '''
+class attentionStructure():
+    # 广播关注列表
+    def __init__(self, attention):
+        self.operation_num = 8
+        self.attentionlist = attention
+
