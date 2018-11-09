@@ -3,9 +3,11 @@ import pickle
 import socket
 import sys
 import threading
+from functools import partial
 
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QApplication, QListWidgetItem, QMessageBox
+from PyQt5.QtCore import QDateTime, Qt
 
 from cList_UI import list_Ui
 from login import Login as login
@@ -21,7 +23,6 @@ class Client:
         # 目标地址，即服务器IP，为固定IP
         self.login_UI = login()
         self.register_UI = register()
-        self.list = list_Ui()
         # 将界面作为作为一个类属性
         self.login_UI.login.clicked.connect(self.Login)
         self.login_UI.register.clicked.connect(self.register_UI.show)
@@ -112,13 +113,15 @@ class Client:
         is_remeber = self.login_UI.rem_password.isChecked()
         auto_login = self.login_UI.auto_login.isChecked()
         # 下述是发登录包流程
+        
         UDP_socket = self.BuiltSocket()
         data_structure = LoginStructure(username, password)
         data_ser = pickle.dumps(data_structure)
         UDP_socket.sendto(data_ser, self.aim_addr)
         data_str = UDP_socket.recv(1024)
         data_rev = pickle.loads(data_str)
-        usernames = ['abc', 'bcd', 'cde']
+
+        usernames = ['abc', 'bcd', 'cde'] 
 
         # 在这里将关注列表添加到usernames中
 
@@ -126,8 +129,12 @@ class Client:
             self.username = username
             self.list = list_Ui(self.username)
             # 这里缺一句界面关联关注功能的函数调用，界面组后续会补上
+            self.list.toolButton_add.clicked.connect(self.addBtnClicked)
+            i = 0
             for x in usernames:
                 self.list.addConcern(x)
+                self.list.listWidget.item(i).chat.pushButton_send.clicked.connect(partial(self.sendBtnClicked, str(x)))
+                i = i + 1
             self.login_UI.close()
             self.list.show()
 
@@ -163,7 +170,53 @@ class Client:
         :return:
         """
 
-
+    def addBtnClicked(self):
+        """
+        按钮触发关注用户
+        :param user:{[str]} --[要关注的用户名的字符串] 
+        """
+        user = str(self.list.lineEdit.text())
+        if Focus(self.username,user):
+            #self.usernames.append(user) 添加到本地关注列表中
+            self.list.addConcern(user)
+            self.list.listWidget.item(self.list.listWidget.count()-1).chat.pushButton_send.clicked.connect(lambda: self.sendBtnClicked(user))
+        else:
+            QMessageBox.warning(self.list, 'Warn', '该用户已存在列表中或该用户不存在', QMessageBox.Ok)
+    
+    def sendBtnClicked(self, user):
+        """
+        按键触发发送消息
+        :param user:{[str]} --[要发送的用户名的字符串]
+        """
+        row = self.list.searchuser(user)
+        if self.list.listWidget.item(row).chat.textEdit_send.toPlainText() == "" :
+            QMessageBox.warning(self.list.listWidget.item(row).chat, "Warn", "发送内容不能为空", QMessageBox.Ok)
+            return
+        else:
+            msg=str(self.list.listWidget.item(row).chat.textEdit_send.toHtml())
+            #sendMessage(msg, user) 这里要调用客户端发送消息的函数 
+            self.list.listWidget.item(row).chat.textEdit_send.clear()
+            self.list.listWidget.item(row).chat.textEdit_send.setFocus()
+            time = QDateTime.currentDateTime().toString("yyyy-MM-dd hh:mm:ss")
+            self.list.listWidget.item(row).chat.textBrowser_show.setTextColor(Qt.darkGreen)
+            self.list.listWidget.item(row).chat.textBrowser_show.setCurrentFont(QFont('Times New Roman', 9))
+            self.list.listWidget.item(row).chat.textBrowser_show.append(self.username + '\t' + time)
+            self.list.listWidget.item(row).chat.textBrowser_show.append(msg)
+    
+    def msgShowInChat (self, username, msg):
+        """
+        将收到的信息显示到对应的聊天窗口中
+        :param username:{[str]} --[信息来源的用户名的字符串]
+        :param msg:{[str]} --[收到的消息的字符串]
+        """
+        ##客户端接收到消息后应调用此函数，但线程中函数貌似不能调用其他函数，暂时不知道怎么解决
+        row = self.list.searchuser(username)
+        time = QDateTime.currentDateTime().toString("yyyy-MM-dd hh:mm:ss")
+        self.list.listWidget.item(row).chat.textBrowser_show.setTextColor(Qt.darkBlue)
+        self.list.listWidget.item(row).chat.textBrowser_show.setCurrentFont(QFont('Times New Roman', 9))
+        self.list.listWidget.item(row).chat.textBrowser_show.append(username + '\t' + time)
+        self.list.listWidget.item(row).chat.textBrowser_show.append(msg)
+        
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     c = Client()

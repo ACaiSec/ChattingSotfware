@@ -1,13 +1,15 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QHBoxLayout, QVBoxLayout, QMessageBox, QHeaderView, QFontComboBox, QComboBox
-from PyQt5.QtCore import pyqtSlot,Qt
-import sys
+from PyQt5.QtWidgets import  QWidget, QListWidgetItem, QMessageBox, QColorDialog, QHeaderView, QApplication, QHBoxLayout, QVBoxLayout
+from PyQt5.QtCore import pyqtSlot, Qt
+from PyQt5.QtGui import QFont, QColor, QTextCursor, QTextCharFormat, QTextDocumentWriter
+
 
 class chat_Ui(QWidget):
 
-    def __init__(self):
+    def __init__(self, aimuser):
        
         super().__init__()
+        self.aimuser = aimuser
         self.initUI()
 
     def initUI(self):
@@ -15,13 +17,13 @@ class chat_Ui(QWidget):
         self.setStyleSheet("#ChatRoom{ background:rgb(255, 255, 255); }")
         self.setObjectName("ChatRoom")
         self.resize(598, 538)
-        self.setMinimumSize(588, 528)
+        self.setMinimumSize(588,528)
         self.setAcceptDrops(False)
 
         # 定义控件
         self.toolButton_bold = QtWidgets.QToolButton()
         icon1 = QtGui.QIcon()
-        icon1.addPixmap(QtGui.QPixmap("Image/B.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon1.addPixmap(QtGui.QPixmap("图形界面/Image/B.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_bold.setIcon(icon1)
         self.toolButton_bold.setIconSize(QtCore.QSize(16, 16))
         self.toolButton_bold.setCheckable(True)
@@ -30,7 +32,7 @@ class chat_Ui(QWidget):
         
         self.toolButton_italic = QtWidgets.QToolButton()
         icon2 = QtGui.QIcon()
-        icon2.addPixmap(QtGui.QPixmap("Image/I.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon2.addPixmap(QtGui.QPixmap("图形界面/Image/I.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_italic.setIcon(icon2)
         self.toolButton_italic.setIconSize(QtCore.QSize(16, 16))
         self.toolButton_italic.setCheckable(True)
@@ -39,7 +41,7 @@ class chat_Ui(QWidget):
         
         self.toolButton_underline = QtWidgets.QToolButton()
         icon3 = QtGui.QIcon()
-        icon3.addPixmap(QtGui.QPixmap("Image/U.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon3.addPixmap(QtGui.QPixmap("图形界面/Image/U.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_underline.setIcon(icon3)
         self.toolButton_underline.setIconSize(QtCore.QSize(16, 16))
         self.toolButton_underline.setCheckable(True)
@@ -48,7 +50,7 @@ class chat_Ui(QWidget):
         
         self.toolButton_color = QtWidgets.QToolButton()
         icon4 = QtGui.QIcon()
-        icon4.addPixmap(QtGui.QPixmap("Image/C.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon4.addPixmap(QtGui.QPixmap("图形界面/Image/C.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_color.setIcon(icon4)
         self.toolButton_color.setIconSize(QtCore.QSize(16, 16))
         self.toolButton_color.setCheckable(True)
@@ -57,7 +59,7 @@ class chat_Ui(QWidget):
         
         self.toolButton_image = QtWidgets.QToolButton()
         icon5 = QtGui.QIcon()
-        icon5.addPixmap(QtGui.QPixmap("Image/Image.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon5.addPixmap(QtGui.QPixmap("图形界面/Image/Image.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_image.setIcon(icon5)
         self.toolButton_image.setIconSize(QtCore.QSize(18, 18))
         self.toolButton_image.setCheckable(True)
@@ -66,7 +68,7 @@ class chat_Ui(QWidget):
 
         self.toolButton_file = QtWidgets.QToolButton()
         icon6 = QtGui.QIcon()
-        icon6.addPixmap(QtGui.QPixmap("Image/File.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon6.addPixmap(QtGui.QPixmap("图形界面/Image/File.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.toolButton_file.setIcon(icon6)
         self.toolButton_file.setIconSize(QtCore.QSize(18, 18))
         self.toolButton_file.setCheckable(True)
@@ -110,12 +112,10 @@ class chat_Ui(QWidget):
         self.tableWidget_ulist.setSelectionBehavior(QtWidgets.QAbstractItemView.SelectRows)
         self.tableWidget_ulist.setShowGrid(False)
         self.tableWidget_ulist.setObjectName("tableWidget_ulist")
-        self.tableWidget_ulist.setColumnCount(2)
+        self.tableWidget_ulist.setColumnCount(1)
         self.tableWidget_ulist.setRowCount(0)
         item = QtWidgets.QTableWidgetItem()
         self.tableWidget_ulist.setHorizontalHeaderItem(0, item)
-        item = QtWidgets.QTableWidgetItem()
-        self.tableWidget_ulist.setHorizontalHeaderItem(1, item)
 
         #定义布局
         self.h_box_tool = QHBoxLayout()
@@ -152,7 +152,7 @@ class chat_Ui(QWidget):
         self.v_box_right.addWidget(self.label_ulist)
         self.v_box_right.addWidget(self.tableWidget_ulist)
 
-        self.h_box_all.addLayout(self.v_box_left,2)
+        self.h_box_all.addLayout(self.v_box_left,3)
         self.h_box_all.addLayout(self.v_box_right,1)
         
         self.setLayout(self.h_box_all)
@@ -162,7 +162,7 @@ class chat_Ui(QWidget):
         控件默认文字设置
         """
         self._translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(self._translate("ChatRoom", "ChatRoom"))
+        self.setWindowTitle(self._translate("ChatRoom", self.aimuser))
         self.comboBox_size.setCurrentText(self._translate("ChatRoom", "9"))
         self.comboBox_size.setItemText(0, self._translate("ChatRoom", "9"))
         self.comboBox_size.setItemText(1, self._translate("ChatRoom", "10"))
@@ -196,27 +196,89 @@ class chat_Ui(QWidget):
         self.label_ulist.setText(self._translate("ChatRoom", "用户列表"))
         item = self.tableWidget_ulist.horizontalHeaderItem(0)
         item.setText(self._translate("ChatRoom", "用户名"))
-        item = self.tableWidget_ulist.horizontalHeaderItem(1)
-        item.setText(self._translate("ChatRoom", "IP地址"))
         self.tableWidget_ulist.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
 
     def closeEvent(self, event):
 
         reply = QMessageBox.question(self, 'QUIT', 'QUIT ?', QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
         if reply == QMessageBox.Yes:
-            event.accept()        
+            self.hide()        
         else:
             event.ignore()
 
     @pyqtSlot()
     def on_exitPushButton_clicked(self):
-        self.close()
+        self.close()  
 
+    def mergeFormatDocumentOrSelection(self, format):
+  
+        cursor = self.textEdit_send.textCursor()
+        if not cursor.hasSelection():
+            cursor.select(QTextCursor.Document)
+
+        cursor.mergeCharFormat(format)
+        self.textEdit_send.mergeCurrentCharFormat(format)
+    
+    @pyqtSlot(str)
+    def on_sizeComboBox_currentIndexChanged(self, p0):
+        
+        fmt = QTextCharFormat()
+        fmt.setFontPointSize(int(p0))
+        self.mergeFormatDocumentOrSelection(fmt)
+        self.textEdit_send.setFocus()
+    
+    @pyqtSlot(str)
+    def on_fontComboBox_currentIndexChanged(self, p0):
+        
+        fmt = QTextCharFormat()
+        fmt.setFontFamily(p0)
+        self.mergeFormatDocumentOrSelection(fmt)
+        self.textEdit_send.setFocus()
+    
+    @pyqtSlot(bool)
+    def on_boldToolButton_clicked(self, checked):
+       
+        fmt = QTextCharFormat()
+        fmt.setFontWeight(checked and QFont.Bold or QFont.Normal)
+        self.mergeFormatDocumentOrSelection(fmt)
+
+        self.textEdit_send.setFocus()
+    
+    @pyqtSlot(bool)
+    def on_italicToolButton_clicked(self, checked):
+        
+        fmt = QTextCharFormat()
+        fmt.setFontItalic(checked)
+        self.mergeFormatDocumentOrSelection(fmt)
+
+        self.textEdit_send.setFocus()
+    
+    @pyqtSlot(bool)
+    def on_underlineToolButton_clicked(self, checked):
+        
+        fmt = QTextCharFormat()
+        fmt.setFontUnderline(checked)
+        self.mergeFormatDocumentOrSelection(fmt)
+        self.textEdit_send.setFocus()
+
+    @pyqtSlot(bool)
+    def on_colorToolButton_clicked(self):
+       
+        col = QColorDialog.getColor(self.textEdit_send.textColor(), self)
+        if not col.isValid():
+            return
+        fmt = QTextCharFormat()
+        fmt.setForeground(col)
+        self.mergeFormatDocumentOrSelection(fmt)
+        self.textEdit_send.setFocus()
+'''
 if __name__ == '__main__':
 
     app = QApplication(sys.argv)
-    ex = chat_Ui()
+    ex = example()
+    ex.initUI()
     ex.show()
     sys.exit(app.exec_())      
+'''
 
     
